@@ -172,3 +172,63 @@ INSERT INTO `custumers` (`custumer_type`,`person_id`) VALUES
 
 SELECT * FROM `custumers`;
 
+
+
+CREATE TABLE IF NOT EXISTS product (
+`product_id` INT(11),
+`name` VARCHAR (14) NOT NULL UNIQUE PRIMARY KEY,
+`date` DATE NOT NULL UNIQUE,
+`price` INT(11) NOT NULL,
+`fk_product`INT,
+`fk_country`INT,
+FOREIGN KEY (`fk_product`)
+        REFERENCES producer (`producer_id`),
+FOREIGN KEY (`fk_country`)
+        REFERENCES country (`country_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS producer(
+`producer_id` INT(11) PRIMARY KEY,
+`name_producer` CHAR(20) NOT NULL UNIQUE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS country(
+`country_id` INT(11) NOT NULL KEY UNIQUE,
+`name` CHAR(14) NOT NULL UNIQUE
+);
+
+DROP TABLE producer;
+DROP TABLE product;
+DROP TABLE country;
+
+
+SELECT count(*) as `producer`,
+   SUM(price) as price_each FROM producer as `prod`
+   INNER JOIN product as `pr` on
+   `pr`.`fk_product` = `prod`.`producer_id`
+   GROUP BY producer_id;
+
+
+SELECT count(*) as `producer`,
+   SUM(price) as price_each FROM producer as `prod`
+   INNER JOIN product as `pr` on
+   `pr`.`fk_product` = `prod`.`producer_id`
+   AND `prod`.`name_producer` LIKE 'Y%'
+   GROUP BY producer_id;
+
+
+SELECT count(*) as `producer_count`,
+    `prod`.`name_producer`,
+    `cn`.`country_id`,
+    `cn`.`name`,
+    SUM(price) as price_each
+       FROM producer as `prod`
+   INNER JOIN product as `pr` on
+   `pr`.`fk_product` = `prod`.`producer_id`
+   INNER JOIN country as `cn` on
+   `pr`.`fk_country` = `cn`.`country_id`
+   GROUP BY producer_id, country_id
+   HAVING `producer_count` > 1;
+
+
