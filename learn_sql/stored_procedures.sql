@@ -232,5 +232,35 @@ BEGIN
 END$$
 DELIMITER ;
 
+
 CALL LoopDemo();
+
+
+DELIMITER $$
+CREATE FUNCTION Country(
+	name_country VARCHAR(10)
+)
+RETURNS VARCHAR(20)
+DETERMINISTIC
+BEGIN
+    DECLARE countryLevel VARCHAR(20);
+    IF name_country = 'Italy' THEN
+		SET countryLevel = name_country;
+    ELSEIF (name_country = 'Ukraine') THEN
+        SET countryLevel = 'GOLD';
+    END IF;
+	RETURN (countryLevel);
+END$$
+DELIMITER ;
+
+DROP FUNCTION Country;
+
+SHOW FUNCTION STATUS
+WHERE db = 'learn_sql_mysql';
+
+SELECT name ,
+  Country('Italy')
+FROM country;
+
+SHOW WARNINGS;
 
