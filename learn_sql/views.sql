@@ -28,7 +28,6 @@ SELECT * FROM daysofweek;
 
 
 SHOW TABLES;
-
 SHOW FULL TABLES;
 
 
